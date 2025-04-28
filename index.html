@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mortar Angle Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <h1>Mortar Angle Calculator</h1>
@@ -12,20 +13,23 @@
     <button onclick="calculateAngle()">Calculate Angle</button>
     <p id="result"></p>
 
+    <canvas id="angleChart" width="400" height="200"></canvas>
+
     <script>
+        const dataPoints = [
+            [104, 70],
+            [126, 65],
+            [135, 62.5],
+            [140, 60],
+            [148, 57.5],
+            [152, 55],
+            [158, 52.5],
+            [162, 50],
+            [166, 45]
+        ];
+
         function calculateAngle() {
             const distance = parseFloat(document.getElementById('distance').value);
-            const dataPoints = [
-                [104, 70],
-                [126, 65],
-                [135, 62.5],
-                [140, 60],
-                [148, 57.5],
-                [152, 55],
-                [158, 52.5],
-                [162, 50],
-                [166, 45]
-            ];
 
             if (distance < 104 || distance > 166) {
                 document.getElementById('result').innerText = "Distance out of supported range (104m - 166m).";
@@ -45,6 +49,38 @@
 
             document.getElementById('result').innerText = "Recommended firing angle: 45 degrees";
         }
+
+        // Chart.js setup
+        const ctx = document.getElementById('angleChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dataPoints.map(dp => dp[0]),
+                datasets: [{
+                    label: 'Angle vs Distance',
+                    data: dataPoints.map(dp => dp[1]),
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Distance (meters)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Angle (degrees)'
+                        }
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
