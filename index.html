@@ -50,18 +50,30 @@
             document.getElementById('result').innerText = "Recommended firing angle: 45 degrees";
         }
 
-        // Chart.js setup
+        // Generate more points to simulate a parabola
+        function generateParabolaPoints() {
+            const parabolaPoints = [];
+            for (let x = 104; x <= 166; x += 1) {
+                let y = -0.004 * (x - 135)**2 + 62.5; // Adjusted parabola equation
+                parabolaPoints.push({x: x, y: y});
+            }
+            return parabolaPoints;
+        }
+
         const ctx = document.getElementById('angleChart').getContext('2d');
         const chart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: dataPoints.map(dp => dp[0]),
                 datasets: [{
-                    label: 'Angle vs Distance',
-                    data: dataPoints.map(dp => dp[1]),
+                    label: 'Angle vs Distance (Parabolic)',
+                    data: generateParabolaPoints(),
+                    parsing: {
+                        xAxisKey: 'x',
+                        yAxisKey: 'y'
+                    },
                     borderWidth: 2,
                     fill: false,
-                    tension: 0.1
+                    tension: 0
                 }]
             },
             options: {
@@ -70,7 +82,9 @@
                         title: {
                             display: true,
                             text: 'Distance (meters)'
-                        }
+                        },
+                        min: 104,
+                        max: 166
                     },
                     y: {
                         title: {
