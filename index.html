@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortar Angle Calculator</title>
+</head>
+<body>
+    <h1>Mortar Angle Calculator</h1>
+    <p>Enter the distance (104m - 166m):</p>
+    <input type="number" id="distance" min="104" max="166" step="0.1">
+    <button onclick="calculateAngle()">Calculate Angle</button>
+    <p id="result"></p>
+
+    <script>
+        function calculateAngle() {
+            const distance = parseFloat(document.getElementById('distance').value);
+            const dataPoints = [
+                [104, 70],
+                [126, 65],
+                [135, 62.5],
+                [140, 60],
+                [148, 57.5],
+                [152, 55],
+                [158, 52.5],
+                [162, 50],
+                [166, 45]
+            ];
+
+            if (distance < 104 || distance > 166) {
+                document.getElementById('result').innerText = "Distance out of supported range (104m - 166m).";
+                return;
+            }
+
+            for (let i = 0; i < dataPoints.length - 1; i++) {
+                let [d1, a1] = dataPoints[i];
+                let [d2, a2] = dataPoints[i + 1];
+
+                if (d1 <= distance && distance <= d2) {
+                    let angle = a1 + (a2 - a1) * (distance - d1) / (d2 - d1);
+                    document.getElementById('result').innerText = `Recommended firing angle: ${angle.toFixed(2)} degrees`;
+                    return;
+                }
+            }
+
+            document.getElementById('result').innerText = "Recommended firing angle: 45 degrees";
+        }
+    </script>
+</body>
+</html>
